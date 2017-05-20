@@ -29,7 +29,31 @@ RUN apk add --no-cache \
     ruby-rdoc
 RUN gem install video_transcoding -v "$VERSION"
 
+
+ENV MAKEMKV_VERSION 1.10.5
+
+RUN apk add --no-cache \
+    expat-dev \
+    ffmpeg-dev \
+    g++ \
+    libressl-dev \
+    make \
+    musl-dev \
+    qt-dev \
+    zlib-dev
+
+ADD http://www.makemkv.com/download/makemkv-oss-$MAKEMKV_VERSION.tar.gz /tmp/makemkv-oss.tar.gz
+RUN tar xzf /tmp/makemkv-oss.tar.gz \
+ && rm /tmp/makemkv-oss.tar.gz \
+ && cd /makemkv-oss-$MAKEMKV_VERSION \
+ && ./configure --prefix="/usr/local" \
+ && make PREFIX="/usr/local"
+# && make install \
+# && rm -rf /makemkv-oss
+
 #USER root
+
+WORKDIR /media
 
 ENTRYPOINT []
 
